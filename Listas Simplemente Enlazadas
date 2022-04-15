@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo{
+    int elemento;
+    struct Nodo *sig;
+};
+
+struct Nodo *crearNodo(){
+    struct Nodo *nodoNuevo;
+    nodoNuevo = (struct Nodo *)malloc(sizeof(struct Nodo));
+    printf("Ingresa un elemento numerico: ");
+    scanf("%d",&nodoNuevo->elemento);
+    nodoNuevo->sig = NULL;
+    return nodoNuevo;
+}
+
+void mostrarLista(struct Nodo *rec){
+    while (rec!= NULL){
+        printf("[%d]->", rec->elemento);
+        rec = rec->sig;
+    }
+    printf("NULL\n");
+}
+
+void enlazarNodo(struct Nodo **head, struct Nodo *listaNueva){
+    struct Nodo *rec = *head;
+    if (*head==NULL){
+        *head = listaNueva;
+    }
+    else{
+        while (rec!=NULL){
+            if (rec->sig==NULL){
+                rec->sig = listaNueva;
+                rec=listaNueva;
+            }
+            rec = rec->sig;
+        }
+        
+    }
+}
+
+void eliminarNodo(struct Nodo **head, int posicion){
+    struct Nodo *rec = *head;
+    int recPosicion;
+    if (*head != NULL){
+        if (posicion==0){
+            *head=rec->sig;
+        }
+        else{
+            recPosicion = 1;
+            while (rec!=NULL){
+                if (recPosicion == posicion){
+                    rec->sig = rec->sig->sig;
+                }
+                recPosicion++;
+                rec=rec->sig;
+            }   
+        }
+    }
+}
+
+void reemplazarNodo(struct Nodo **head, struct Nodo *nuevo, int posicion){
+    struct Nodo *rec = *head;
+    int recPosicion;
+    if (*head==NULL){
+        *head=nuevo;
+    }
+    else{
+        if (posicion == 0){
+            nuevo->sig=rec->sig;
+            *head=nuevo;
+        }
+        else{
+            recPosicion = 1; // 1 porque queremos trabajar con una posicion de mas
+            while(rec!=NULL){
+                if (recPosicion == posicion){
+                    nuevo->sig = rec->sig->sig;
+                    rec->sig = nuevo;
+                }
+                recPosicion++;
+                rec= rec->sig;
+            }
+            
+        }
+    }
+    
+    
+}
+
+int main(){
+    struct Nodo *head=NULL;
+    head = crearNodo();
+    enlazarNodo(&head,crearNodo());
+    enlazarNodo(&head,crearNodo());
+    enlazarNodo(&head,crearNodo());
+    mostrarLista(head); 
+    eliminarNodo(&head,3); // el segundo parametro es la posicion a eliminar, va del 0 al infinito positivo
+    mostrarLista(head);
+    reemplazarNodo(&head,crearNodo(),1);
+    mostrarLista(head);
+    return 0;
+}
+
+
